@@ -1,0 +1,1 @@
+{"version":3,"file":"IHttpServer.d.ts","sourceRoot":"","sources":["../../../../src/domain/repositories/IHttpServer.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,WAAW;IACxB,aAAa,CAAC,MAAM,EAAC,MAAM,EAAC,IAAI,EAAC,MAAM,EAAC,OAAO,EAAC,QAAQ,GAAG,IAAI,CAAC;IAChE,cAAc,IAAI,GAAG,CAAC;CACzB"}
