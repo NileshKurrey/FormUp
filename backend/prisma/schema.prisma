@@ -1,15 +1,182 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DB_URL")
+}
+
+/* ========= ENUMS ========= */
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum Status {
+  ACTIVE
+  DISBANDED
+  SOFTDELETED
+  PENDING
+  APPROVED
+  DECLINED
+  WITHDRAWN
+  EXPIRED
+}
+
+enum EntityType {
+  USER
+  GROUP
+  APPLICATION
+  COHORT
+}
+
+enum Actions {
+  CREATE
+  JOIN_REQUEST
+  APPROVE
+  DECLINE
+  WITHDRAW
+  LEAVE
+  KICK
+  DISBAND
+  POST_NOTICE
+}
+
+/* ========= MODELS ========= */
+
+model Users {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  name          String?
+  oidcId        String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  role          Role          @default(STUDENT)
+  isMember      Boolean       @default(false)
+  status        UserStatus    @default(ACTIVE)
+  profileLinks  String[]
+  
+  // Relations
+  auditLogs     AuditLog[]
+  memberOf      Groups[]      @relation("GroupMembers")
+  leaderOf      Groups[]      @relation("GroupLeaders")
+  moderatorOf   CohortModerators[]
+  studentOf     CohortStudents[]
+  applications  Applications[]
+}
+
+/* Cohort: has many students, many groups */
+model Cohorts {
+  id            String     @id @default(cuid())
+  name          String
+  duration      Int
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  description   String
+  startDate     DateTime
+  endDate       DateTime
+  
+  // Relations
+  moderators    CohortModerators[]
+  students      CohortStudents[]
+  groups        Groups[]  @relation("CohortGroups")
+}
+
+model CohortModerators {
+  cohort       Cohorts     @relation(fields: [cohortId], references: [id])
+  cohortId     String
+  user         Users       @relation(fields: [userId], references: [id])
+  userId       String
+  assignedAt   DateTime    @default(now())
+
+  @@id([cohortId, userId])
+}
+
+model CohortStudents {
+  cohort       Cohorts     @relation(fields: [cohortId], references: [id])
+  cohortId     String
+  user         Users       @relation(fields: [userId], references: [id])
+  userId       String
+  enrolledAt   DateTime    @default(now())
+
+  @@id([cohortId, userId])
+}
+
+/* Groups: belongs to one cohort, has many users and posts */
+model Groups {
+  id                String         @id @default(cuid())
+  name              String
+  description       String
+  cohortId          String
+  leaderId          String
+  status            Status         @default(ACTIVE)
+  createdAt         DateTime       @default(now())
+  disbandAt         DateTime?
+  softDeleted       Boolean        @default(false)
+  applicationExpiry String?
+
+  // Relations
+  leader            Users          @relation("GroupLeaders", fields: [leaderId], references: [id])
+  members           Users[]        @relation("GroupMembers")
+  cohort            Cohorts        @relation("CohortGroups", fields: [cohortId], references: [id])
+  posts             Post[]
+  applications      Applications[]
+  auditLogs         AuditLog[]
+}
+
+/* Application for joining group */
+model Applications {
+  id            String     @id @default(cuid())
+  title         String
+  description   String
+  applicantId   String
+  groupId       String
+  metaData      String
+  profileLinks  String[]
+  status        String
+  requestedAt   DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  approvedAt    DateTime?
+  withdrawnAt   DateTime?
+  rejectedAt    DateTime?
+
+  // Relations
+  applicant     Users      @relation(fields: [applicantId], references: [id])
+  group         Groups     @relation(fields: [groupId], references: [id])
+}
+
+/* Group posts */
+model Post {
+  id        String    @id @default(cuid())
+  groupId   String
+  title     String
+  content   String
+  postedBy  String
+  postedAt  DateTime  @default(now())
+
+  // Relations
+  group     Groups    @relation(fields: [groupId], references: [id])
+}
+
+/* Action logs */
+model AuditLog {
+  id          String       @id @default(cuid())
+  entityType  EntityType   @default(USER)
+  entityId    String
+  action      String
+  message     String
+  userId      String
+  timestamp   DateTime     @default(now())
+  metaData    Json?
+
+  // Relations
+  actor       Users        @relation(fields: [userId], references: [id])
+  group       Groups?      @relation(fields: [entityId], references: [id])
 }

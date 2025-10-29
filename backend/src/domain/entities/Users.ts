@@ -14,6 +14,7 @@ export class Users{
         public updatedAt: Date,
         public role: Roles,
         public isMember: boolean,
+        public refreshToken?: string,
         public OidcId?: string,
         public groupId?: string,
         public profileLinks?: string[],

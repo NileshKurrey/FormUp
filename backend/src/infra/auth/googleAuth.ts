@@ -66,10 +66,8 @@ export class GoogleAuth implements IAuthRepository {
       return authUrl;
   }
 
-  async handleCallback(code: string, state: string, savedNonce: string, savedState: string): Promise<string> {
-        if (state !== savedState) {
-            throw new Error('Invalid state parameter');
-        }
+  async handleCallback(code: string, state: string, savedNonce: string, savedState: string){
+       
         // Exchange code for tokens
         const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
             code,
@@ -82,6 +80,10 @@ export class GoogleAuth implements IAuthRepository {
         const { id_token } = tokenResponse.data;
         // Verify ID token
         const verifiedToken: string  = await this.verifyToken(id_token);
-        return verifiedToken;
-    }
+        if (!verifiedToken) {
+            return { token: '', status: 401 };
+        }
+        const res = { token: verifiedToken, status: 200 };
+        return res;
+}
 }

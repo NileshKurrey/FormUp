@@ -8,3 +8,34 @@
 2025-10-25T11:48:20.362Z [ERROR]: Error starting server: PORT is not defined
 2025-10-25T11:48:29.473Z [INFO]: Server is running on port 4000
 2025-10-28T17:43:22.156Z [INFO]: Server is running on port 4000
+2025-10-29T16:16:18.928Z [INFO]: Server is running on port 4000
+2025-10-29T16:25:36.001Z [INFO]: undefined
+2025-10-29T16:25:36.004Z [INFO]: Server is running on port 4000
+2025-10-29T16:25:46.764Z [INFO]: postgresql://leetbalstdb_owner:npg_oP1Y9lysTJdh@ep-yellow-glitter-a8hw0wz1-pooler.eastus2.azure.neon.tech/leetbalstdb?sslmode=require&channel_binding=require
+2025-10-29T16:25:46.766Z [INFO]: Server is running on port 4000
+2025-10-29T18:02:05.758Z [INFO]: postgresql://n8nClone_owner:npg_OL3XNYpdE0SF@ep-lively-cherry-a81izgo2-pooler.eastus2.azure.neon.tech/n8nClone?sslmode=require&channel_binding=require
+2025-10-29T18:02:05.761Z [INFO]: Server is running on port 4000
+2025-10-29T18:02:10.362Z [INFO]: postgresql://n8nClone_owner:npg_OL3XNYpdE0SF@ep-lively-cherry-a81izgo2-pooler.eastus2.azure.neon.tech/n8nClone?sslmode=require&channel_binding=require
+2025-10-29T18:02:10.366Z [INFO]: Server is running on port 4000
+2025-10-29T18:02:37.353Z [INFO]: Server is running on port 4000
+2025-10-29T18:30:01.402Z [INFO]: Server is running on port 4000
+2025-10-29T18:30:05.291Z [INFO]: Server is running on port 4000
+2025-10-29T18:30:07.991Z [INFO]: Server is running on port 4000
+2025-10-29T18:58:56.545Z [INFO]: Server is running on port 4000
+2025-10-29T19:04:32.654Z [INFO]: Server is running on port 4000
+2025-10-29T19:07:20.864Z [INFO]: Server is running on port 4000
+2025-10-29T19:08:19.811Z [INFO]: Server is running on port 4000
+2025-10-29T19:10:05.579Z [INFO]: Server is running on port 4000
+2025-10-29T19:12:20.003Z [INFO]: Server is running on port 4000
+2025-10-29T19:15:49.786Z [INFO]: Server is running on port 4000
+2025-10-29T19:16:57.007Z [INFO]: Server is running on port 4000
+2025-10-29T19:28:04.881Z [INFO]: Server is running on port 4000
+2025-10-29T19:28:36.685Z [INFO]: Server is running on port 4000
+2025-10-29T19:37:23.344Z [INFO]: Server is running on port 4000
+2025-10-29T19:37:30.524Z [INFO]: ✅ Server is running on http://localhost:4000
+2025-10-29T19:39:13.109Z [INFO]: ✅ Server is running on http://localhost:4000
+2025-10-29T19:40:00.232Z [INFO]: ✅ Server is running on http://localhost:4000
+2025-10-29T19:41:08.850Z [INFO]: ✅ Server is running on http://localhost:4000
+2025-10-29T19:45:00.832Z [INFO]: ✅ Server is running on http://localhost:4000
+2025-10-29T19:46:55.069Z [INFO]: ✅ Server is running on http://localhost:4000
+2025-10-29T19:47:24.011Z [ERROR]: Unsupported OIDC type: undefined
