@@ -1,3 +1,4 @@
+import type { LoginDTO } from "../../infra/auth/LoginDto.js";
 import type { Users as UserEntity } from "../../domain/entities/Users.js";
 import type { IAuthRepository } from "../../domain/repositories/IAuthRepositry.js";
 import type { IDatabaseRepository } from "../../domain/repositories/IDatabaseRepostry.js";
@@ -11,7 +12,7 @@ export class UserService implements IUserRepository{
      container = createServiceContainer();
      logger:ILoggerRepository = this.container.logger;
      database:IDatabaseRepository = this.container.database;
-     model:string = "Users"
+     model:string = "users"
     constructor(){
         this.googleAuth = new GoogleAuth()
         
@@ -26,7 +27,7 @@ export class UserService implements IUserRepository{
     }  
     }
 
-    async callback(oidcType: string, code: string, state: string, savednonce: string, savedstate: string): Promise<{ token: string; status: number; }> {
+    async callback(oidcType: string, code: string, state: string, savednonce: string, savedstate: string): Promise<{ token: LoginDTO; status: number; }> {
         if (oidcType === "google") {    
             return this.googleAuth.handleCallback(code, state, savednonce, savedstate);
         } else {
@@ -38,6 +39,10 @@ export class UserService implements IUserRepository{
     async findById(id: string): Promise<UserEntity | null> {
         const user  = await this.database.findById(this.model,id)
         return user;
+    }
+    async findByEmail(email:string): Promise<boolean>{
+       const user = await this.database.findOne("seedStudentEmail",{"email":email})
+       return user !== null;
     }
     async create(user: UserEntity): Promise<UserEntity> {
         const createdUser = await this.database.create(this.model,user)
@@ -54,5 +59,8 @@ export class UserService implements IUserRepository{
         const users = await this.database.findAll(this.model)
         return users;
     }
-    
+    async findUser(oidcId: string): Promise<UserEntity | null> {
+        const user = await this.database.findOne(this.model,{oidcId})
+        return user;
+    }
 }

@@ -9,6 +9,7 @@ const envSchema = z.object({
   GOOGLE_REDIRECT_URI: z.string().url(),
   JWKs_URI: z.string().url(),
   DB_URL: z.string().url(),
+  JWT_SECRET: z.string().min(10),
 });
 
 function createEnv(env: NodeJS.ProcessEnv) {

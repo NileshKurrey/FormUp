@@ -12,7 +12,7 @@ async function init() {
     const PORT: number = +(env.PORT ?? 3000);
 
     server.listen(PORT, () => {
-      logger.info(`✅ Server is running on http://localhost:${PORT}`);
+      logger.info(`✅ Server is running on Port:${PORT}`);
     });
   } catch (error) {
     logger.error("❌ Error starting server:", error);

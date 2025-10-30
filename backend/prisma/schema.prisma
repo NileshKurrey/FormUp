@@ -87,6 +87,7 @@ model Cohorts {
   moderators    CohortModerators[]
   students      CohortStudents[]
   groups        Groups[]  @relation("CohortGroups")
+  SeedData      SeedData[] @relation("CohortSeedData")
 }
 
 model CohortModerators {
@@ -109,7 +110,24 @@ model CohortStudents {
   @@id([cohortId, userId])
 }
 
+model SeedData{
+  id          String    @id @default(cuid())
+  cohortId    String   
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  cohort      Cohorts   @relation(name: "CohortSeedData",fields: [cohortId], references: [id])
+  Students    SeedStudent[] @relation("SeedDataStudents")
+}
+
+model SeedStudent{
+  id        String    @id @default(cuid())
+  name     String
+  email    String
+  seedDataId String
+  seedData   SeedData  @relation("SeedDataStudents", fields: [seedDataId], references: [id])
+}
 /* Groups: belongs to one cohort, has many users and posts */
+
 model Groups {
   id                String         @id @default(cuid())
   name              String

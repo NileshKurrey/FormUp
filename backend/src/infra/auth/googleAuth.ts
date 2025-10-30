@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 
 
-
 export class GoogleAuth implements IAuthRepository {
   private jwksUri: string;
   private clientId: string;
@@ -76,14 +75,26 @@ export class GoogleAuth implements IAuthRepository {
             redirect_uri: this.redirectUri,
             grant_type: 'authorization_code',
         });
+       
 
-        const { id_token } = tokenResponse.data;
+        const { id_token, refresh_token } = tokenResponse.data;
         // Verify ID token
-        const verifiedToken: string  = await this.verifyToken(id_token);
+        const verifiedToken = await this.verifyToken(id_token);
         if (!verifiedToken) {
-            return { token: '', status: 401 };
+            return { token: { accessToken: '', sub: '', email: '', given_name: '', family_name: '' }, status: 401 };
         }
-        const res = { token: verifiedToken, status: 200 };
+        const decodedToken = jwt.decode(id_token) as any;
+        const res = { 
+            token: { 
+               refresh_token: refresh_token,
+                accessToken: verifiedToken,
+                sub: decodedToken.sub,
+                email: decodedToken.email,
+                given_name: decodedToken.given_name,
+                family_name: decodedToken.family_name
+            }, 
+            status: 200 
+        };
         return res;
 }
 }

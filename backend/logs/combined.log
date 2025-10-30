@@ -1,41 +1,69 @@
-2025-10-25T07:19:19.879Z [INFO]: Server is running on port 4000
-2025-10-25T07:19:33.322Z [ERROR]: Error starting server: PORT is not defined
-2025-10-25T07:19:40.195Z [INFO]: Server is running on port 4000
-2025-10-25T07:20:59.969Z [INFO]: Server is running on port 4000
-2025-10-25T07:21:07.237Z [INFO]: Server is running on port 4000
-2025-10-25T11:47:46.102Z [INFO]: Server is running on port 4000
-2025-10-25T11:48:12.787Z [INFO]: Server is running on port 3000
-2025-10-25T11:48:20.362Z [ERROR]: Error starting server: PORT is not defined
-2025-10-25T11:48:29.473Z [INFO]: Server is running on port 4000
-2025-10-28T17:43:22.156Z [INFO]: Server is running on port 4000
-2025-10-29T16:16:18.928Z [INFO]: Server is running on port 4000
-2025-10-29T16:25:36.001Z [INFO]: undefined
-2025-10-29T16:25:36.004Z [INFO]: Server is running on port 4000
-2025-10-29T16:25:46.764Z [INFO]: postgresql://leetbalstdb_owner:npg_oP1Y9lysTJdh@ep-yellow-glitter-a8hw0wz1-pooler.eastus2.azure.neon.tech/leetbalstdb?sslmode=require&channel_binding=require
-2025-10-29T16:25:46.766Z [INFO]: Server is running on port 4000
-2025-10-29T18:02:05.758Z [INFO]: postgresql://n8nClone_owner:npg_OL3XNYpdE0SF@ep-lively-cherry-a81izgo2-pooler.eastus2.azure.neon.tech/n8nClone?sslmode=require&channel_binding=require
-2025-10-29T18:02:05.761Z [INFO]: Server is running on port 4000
-2025-10-29T18:02:10.362Z [INFO]: postgresql://n8nClone_owner:npg_OL3XNYpdE0SF@ep-lively-cherry-a81izgo2-pooler.eastus2.azure.neon.tech/n8nClone?sslmode=require&channel_binding=require
-2025-10-29T18:02:10.366Z [INFO]: Server is running on port 4000
-2025-10-29T18:02:37.353Z [INFO]: Server is running on port 4000
-2025-10-29T18:30:01.402Z [INFO]: Server is running on port 4000
-2025-10-29T18:30:05.291Z [INFO]: Server is running on port 4000
-2025-10-29T18:30:07.991Z [INFO]: Server is running on port 4000
-2025-10-29T18:58:56.545Z [INFO]: Server is running on port 4000
-2025-10-29T19:04:32.654Z [INFO]: Server is running on port 4000
-2025-10-29T19:07:20.864Z [INFO]: Server is running on port 4000
-2025-10-29T19:08:19.811Z [INFO]: Server is running on port 4000
-2025-10-29T19:10:05.579Z [INFO]: Server is running on port 4000
-2025-10-29T19:12:20.003Z [INFO]: Server is running on port 4000
-2025-10-29T19:15:49.786Z [INFO]: Server is running on port 4000
-2025-10-29T19:16:57.007Z [INFO]: Server is running on port 4000
-2025-10-29T19:28:04.881Z [INFO]: Server is running on port 4000
-2025-10-29T19:28:36.685Z [INFO]: Server is running on port 4000
-2025-10-29T19:37:23.344Z [INFO]: Server is running on port 4000
-2025-10-29T19:37:30.524Z [INFO]: ✅ Server is running on http://localhost:4000
-2025-10-29T19:39:13.109Z [INFO]: ✅ Server is running on http://localhost:4000
-2025-10-29T19:40:00.232Z [INFO]: ✅ Server is running on http://localhost:4000
-2025-10-29T19:41:08.850Z [INFO]: ✅ Server is running on http://localhost:4000
-2025-10-29T19:45:00.832Z [INFO]: ✅ Server is running on http://localhost:4000
-2025-10-29T19:46:55.069Z [INFO]: ✅ Server is running on http://localhost:4000
-2025-10-29T19:47:24.011Z [ERROR]: Unsupported OIDC type: undefined
+2025-10-30T14:39:36.612Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T14:42:52.108Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T14:46:40.403Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T14:51:44.318Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T14:52:08.965Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T14:52:16.368Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T14:53:51.191Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T14:54:31.400Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:02:01.639Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:02:32.935Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:04:29.073Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:07:58.418Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:08:23.316Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:13:49.251Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:15:21.241Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T15:17:10.372Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:03:26.806Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:06:06.235Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:32:01.934Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:32:03.408Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:35:24.467Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:35:42.658Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:38:19.332Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:39:31.155Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:46:32.257Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:51:20.567Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T16:57:24.651Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:01:10.049Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:01:25.521Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:02:01.057Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:02:38.433Z [INFO]: get result of decoded token
+2025-10-30T17:03:44.916Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:05:46.463Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:07:22.709Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:07:29.985Z [INFO]: get result of decoded token
+2025-10-30T17:08:58.565Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:09:40.332Z [INFO]: get result of decoded token
+2025-10-30T17:10:04.078Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:10:32.146Z [INFO]: get result of decoded token
+2025-10-30T17:11:53.440Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:12:44.136Z [INFO]: get result of decoded token
+2025-10-30T17:13:12.894Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:13:24.449Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:13:39.536Z [INFO]: get result of decoded token
+2025-10-30T17:14:36.430Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:15:31.092Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:16:57.794Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:17:31.028Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:17:57.836Z [INFO]: get result of decoded token
+2025-10-30T17:18:18.068Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:18:44.687Z [INFO]: get result of decoded token
+2025-10-30T17:20:26.011Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:20:54.283Z [INFO]: get result of decoded token
+2025-10-30T17:22:57.688Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:23:26.694Z [INFO]: get result of decoded token
+2025-10-30T17:26:59.223Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:27:52.936Z [INFO]: get result of decoded token
+2025-10-30T17:29:48.945Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:30:01.827Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:31:31.784Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:32:05.356Z [INFO]: get result of decoded token
+2025-10-30T17:35:41.408Z [INFO]: get result of decoded token
+2025-10-30T17:35:42.331Z [ERROR]: can't able to check enrollment, please try again or sometimes
+2025-10-30T17:42:33.872Z [INFO]: get result of decoded token
+2025-10-30T17:44:37.434Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:44:46.646Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:44:56.926Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:46:57.725Z [INFO]: ✅ Server is running on Port:4000
+2025-10-30T17:47:23.568Z [INFO]: get result of decoded token

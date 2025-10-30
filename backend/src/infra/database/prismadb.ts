@@ -1,4 +1,5 @@
 
+import { email } from "zod";
 import type { IDatabaseRepository } from "../../domain/repositories/IDatabaseRepostry.js";
 import type { PrismaClient } from "../../generated/prisma/client.js";
 import { db } from "./db.js";
@@ -10,7 +11,7 @@ export class PrismaDb implements IDatabaseRepository {
   }
 
   private getModel(model: string): any {
-    const lower = model.toLowerCase();
+    const selectedModel = model
     const modelMap: { [key: string]: any } = {
       users: this.prisma.users,
       cohorts: this.prisma.cohorts,
@@ -18,9 +19,12 @@ export class PrismaDb implements IDatabaseRepository {
       applications: this.prisma.applications,
       post: this.prisma.post,
       auditlog: this.prisma.auditLog,
+      seeddata: this.prisma.seedData,
+      seedStudentEmail: this.prisma.seedStudent
+
     };
 
-    const selected = modelMap[lower];
+    const selected = modelMap[selectedModel];
     if (!selected) throw new Error(`Invalid model name: ${model}`);
     return selected;
   }
@@ -62,6 +66,14 @@ export class PrismaDb implements IDatabaseRepository {
             data: updateData,
         });
     });
+
+   
     return await Promise.all(updatePromises);
   }
+ 
+   async findOne(model: string, query: any): Promise<any> {
+     const m = this.getModel(model);
+     console.log("query in findOne:", model, query);
+     return await m.findFirst({where:query});
+   } 
 }
