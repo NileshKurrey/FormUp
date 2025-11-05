@@ -13,7 +13,7 @@ export class Group {
     public leaderId: string,
     public cohortId: string,
     public applicationExpiry: string | null,
-    public members: string[] | null,
+    public members: string[],
     public posts: string[] | null,
     public applications: string[] | null,
     public auditlogs: string[],
