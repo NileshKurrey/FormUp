@@ -1,13 +1,20 @@
 import type { Group } from '../../domain/entities/Groups.js'
+import type { IDatabaseRepository } from '../../domain/repositories/IDatabaseRepostry.js'
 import type { IGroupRepository } from '../../domain/repositories/IGroupRepositry.js'
-import { createServiceContainer } from '../../infra/di/container.js'
+import type { ILoggerRepository } from '../../domain/repositories/IloggerRepositry.js'
+import { createServiceContainer, type ServiceContainer } from '../../infra/di/container.js'
 
 export class GroupService implements IGroupRepository {
-  container = createServiceContainer()
-  logger = this.container.logger
-  database = this.container.database
+  container: ServiceContainer
+  logger: ILoggerRepository
+  database: IDatabaseRepository
   model: string = 'groups'
   postModel: string = 'post'
+  constructor() {
+    this.container = createServiceContainer()
+    this.logger = this.container.logger
+    this.database = this.container.database
+  }
   async create(group: Group): Promise<Group> {
     const createdGroup = await this.database.create(this.model, group)
     return createdGroup

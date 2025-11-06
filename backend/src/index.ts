@@ -1,6 +1,7 @@
 // src/index.js
 import userRoutes from './app/routes/UserRoutes.js'
 import { groupsRouter } from './app/routes/GroupsRoutes.js'
+import { cohortRouter } from './app/routes/CohortRoutes.js'
 import { createServiceContainer } from './infra/di/container.js'
 import type { Request, Response } from 'express'
 
@@ -10,6 +11,7 @@ export const myapp = async function () {
 
   routers.use('/api/v1/users', userRoutes)
   routers.use('/api/v1/groups', groupsRouter)
+  routers.use('/api/v1/cohorts', cohortRouter)
   routers.get('/', (req: Request, res: Response) => {
     res.status(200).send('Welcome to FormUp API')
   })

@@ -71,10 +71,17 @@ export class PrismaDb implements IDatabaseRepository {
   async findOne(model: string, query: any): Promise<any> {
     const m = this.getModel(model)
     console.log('query in findOne:', model, query)
-    return await m.findFirst({ where: query })
+    return await m.findFirst(query)
   }
   async findMany(model: string, query: any): Promise<any[]> {
     const m = this.getModel(model)
     return await m.findMany({ where: query })
+  }
+  async findByIdandUpdate(model: string, id: string, updateData: any): Promise<any> {
+    const m = this.getModel(model)
+    return await m.update({
+      where: { id },
+      data: updateData,
+    })
   }
 }

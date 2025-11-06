@@ -4,17 +4,21 @@ import type { IAuthRepository } from '../../domain/repositories/IAuthRepositry.j
 import type { IDatabaseRepository } from '../../domain/repositories/IDatabaseRepostry.js'
 import type { ILoggerRepository } from '../../domain/repositories/IloggerRepositry.js'
 import type { IUserRepository } from '../../domain/repositories/IUserRepostiry.js'
+import type { ServiceContainer } from '../../infra/di/container.js'
 import { GoogleAuth } from '../../infra/auth/googleAuth.js'
 import { createServiceContainer } from '../../infra/di/container.js'
 
 export class UserService implements IUserRepository {
   googleAuth: IAuthRepository
-  container = createServiceContainer()
-  logger: ILoggerRepository = this.container.logger
-  database: IDatabaseRepository = this.container.database
+  container: ServiceContainer
+  logger: ILoggerRepository
+  database: IDatabaseRepository
   model: string = 'users'
   constructor() {
     this.googleAuth = new GoogleAuth()
+    this.container = createServiceContainer()
+    this.logger = this.container.logger
+    this.database = this.container.database
   }
   login(oidcType: string, state: string, nonce: string): string {
     if (oidcType === 'google') {

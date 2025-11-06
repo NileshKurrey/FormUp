@@ -9,4 +9,5 @@ export interface IDatabaseRepository {
   deleteById(model: string, id: string): Promise<void>
   updateMany(model: string, data: any): Promise<any[]>
   findMany(model: string, query: any): Promise<any[]>
+  findByIdandUpdate(model: string, id: string, updateData: any): Promise<any>
 }
