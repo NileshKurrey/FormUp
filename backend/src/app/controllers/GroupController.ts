@@ -1,6 +1,10 @@
 import type { NextFunction } from 'express'
-import { ApplicationsService, GroupService } from '../../application/group/groupService.js'
-import type { IApplicationsRepository, IGroupRepository } from '../../domain/repositories/IGroupRepositry.js'
+import { ApplicationsService, GroupService, PostsService } from '../../application/group/groupService.js'
+import type {
+  IApplicationsRepository,
+  IGroupRepository,
+  IPostsRepository,
+} from '../../domain/repositories/IGroupRepositry.js'
 import type { IHttpRequest, IHttpResponse } from '../../domain/repositories/IHttpServer.js'
 import type { ILoggerRepository } from '../../domain/repositories/IloggerRepositry.js'
 import { createServiceContainer, type ServiceContainer } from '../../infra/di/container.js'
@@ -12,11 +16,13 @@ import { ca, th } from 'zod/locales'
 export class GroupController {
   private groupService: IGroupRepository
   private applicationsService: IApplicationsRepository
+  private postsService: IPostsRepository
   private container: ServiceContainer
   private logger: ILoggerRepository
   constructor() {
     this.groupService = new GroupService()
     this.applicationsService = new ApplicationsService()
+    this.postsService = new PostsService()
     this.container = createServiceContainer()
     this.logger = this.container.logger
   }
@@ -271,6 +277,89 @@ export class GroupController {
     res.status(200).json(new ApiResponse(200, applications, 'Pending applications fetched successfully'))
   })
   addPostToGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
-    // Implement in future
+    const postData = req.body
+    const { groupId } = req.params
+    const userId = req.user?.id
+    if (!userId || groupId === undefined) {
+      this.logger.error('User ID and Group ID are required to add post')
+      res.status(400).json({ message: 'User ID and Group ID are required to add post' })
+      next(new Error('User ID and Group ID are required to add post'))
+      throw new ApiError(400, 'User ID and Group ID are required to add post')
+    }
+    postData.postedby = userId
+    postData.groupId = groupId
+    const checkLeader = await this.groupService.findById(groupId)
+    if (checkLeader?.leaderId !== userId) {
+      this.logger.error('Only group leader can add posts')
+      res.status(403).json({ message: 'Only group leader can add posts' })
+      next(new Error('Only group leader can add posts'))
+      throw new ApiError(403, 'Only group leader can add posts')
+    }
+    const post = await this.postsService.createPost(postData)
+  })
+  editPostInGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const postData = req.body
+    const { postId } = req.params
+    const userId = req.user?.id
+    if (!userId || postId === undefined) {
+      this.logger.error('User ID and Post ID are required to edit post')
+      res.status(400).json({ message: 'User ID and Post ID are required to edit post' })
+      next(new Error('User ID and Post ID are required to edit post'))
+      throw new ApiError(400, 'User ID and Post ID are required to edit post')
+    }
+    const existingPosts = await this.postsService.getPostsByGroupId(postData.groupId)
+    const postToEdit = existingPosts.find(post => post.id === postId)
+    if (!postToEdit) {
+      this.logger.error('Post not found')
+      res.status(404).json({ message: 'Post not found' })
+      next(new Error('Post not found'))
+      throw new ApiError(404, 'Post not found')
+    }
+    if (postToEdit.postedby !== userId) {
+      this.logger.error('Only the original poster can edit this post')
+      res.status(403).json({ message: 'Only the original poster can edit this post' })
+      next(new Error('Only the original poster can edit this post'))
+      throw new ApiError(403, 'Only the original poster can edit this post')
+    }
+    const post = await this.postsService.editPost(postId, postData)
+  })
+
+  listPostsInGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { groupId } = req.params
+    if (!groupId) {
+      this.logger.error('Group ID is required to list posts')
+      res.status(400).json({ message: 'Group ID is required to list posts' })
+      next(new Error('Group ID is required to list posts'))
+      throw new ApiError(400, 'Group ID is required to list posts')
+    }
+    const posts = await this.postsService.getPostsByGroupId(groupId)
+    res.status(200).json(new ApiResponse(200, posts, 'Posts fetched successfully'))
+  })
+
+  deletePostFromGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { postId } = req.params
+    const userId = req.user?.id
+    if (!userId || postId === undefined) {
+      this.logger.error('User ID and Post ID are required to delete post')
+      res.status(400).json({ message: 'User ID and Post ID are required to delete post' })
+      next(new Error('User ID and Post ID are required to delete post'))
+      throw new ApiError(400, 'User ID and Post ID are required to delete post')
+    }
+    const existingPosts = await this.postsService.getPostsByGroupId(req.body.groupId)
+    const postToDelete = existingPosts.find(post => post.id === postId)
+    if (!postToDelete) {
+      this.logger.error('Post not found')
+      res.status(404).json({ message: 'Post not found' })
+      next(new Error('Post not found'))
+      throw new ApiError(404, 'Post not found')
+    }
+    if (postToDelete.postedby !== userId) {
+      this.logger.error('Only the original poster can delete this post')
+      res.status(403).json({ message: 'Only the original poster can delete this post' })
+      next(new Error('Only the original poster can delete this post'))
+      throw new ApiError(403, 'Only the original poster can delete this post')
+    }
+    await this.postsService.deletePost(postId)
+    res.status(200).json(new ApiResponse(200, null, 'Post deleted successfully'))
   })
 }

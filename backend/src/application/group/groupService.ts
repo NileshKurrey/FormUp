@@ -1,6 +1,10 @@
-import type { Applications, Group } from '../../domain/entities/Groups.js'
+import type { Applications, Group, Posts } from '../../domain/entities/Groups.js'
 import type { IDatabaseRepository } from '../../domain/repositories/IDatabaseRepostry.js'
-import type { IApplicationsRepository, IGroupRepository } from '../../domain/repositories/IGroupRepositry.js'
+import type {
+  IApplicationsRepository,
+  IGroupRepository,
+  IPostsRepository,
+} from '../../domain/repositories/IGroupRepositry.js'
 import type { ILoggerRepository } from '../../domain/repositories/IloggerRepositry.js'
 import { createServiceContainer, type ServiceContainer } from '../../infra/di/container.js'
 
@@ -85,7 +89,7 @@ export class ApplicationsService implements IApplicationsRepository {
   container: ServiceContainer
   logger: ILoggerRepository
   database: IDatabaseRepository
-  model: string = 'applications'
+  model: string = 'Applications'
   constructor() {
     this.container = createServiceContainer()
     this.logger = this.container.logger
@@ -178,5 +182,32 @@ export class ApplicationsService implements IApplicationsRepository {
   async pendingApplications(groupId: string): Promise<Applications[]> {
     const applications = await this.database.findMany(this.model, { groupId: groupId, status: 'pending' })
     return applications
+  }
+}
+
+export class PostsService implements IPostsRepository {
+  container: ServiceContainer
+  logger: ILoggerRepository
+  database: IDatabaseRepository
+  model: string = 'Post'
+  constructor() {
+    this.container = createServiceContainer()
+    this.logger = this.container.logger
+    this.database = this.container.database
+  }
+  async createPost(postData: Posts): Promise<Posts> {
+    const createdPost = await this.database.create(this.model, postData)
+    return createdPost
+  }
+  async getPostsByGroupId(groupId: string): Promise<Posts[]> {
+    const posts = await this.database.findMany(this.model, { groupId: groupId })
+    return posts
+  }
+  async editPost(postId: string, postData: Posts): Promise<Posts> {
+    const updatedPost = await this.database.updateById(this.model, postData)
+    return updatedPost
+  }
+  async deletePost(postId: string): Promise<void> {
+    await this.database.deleteById(this.model, postId)
   }
 }

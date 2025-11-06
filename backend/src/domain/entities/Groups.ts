@@ -38,3 +38,14 @@ export class Applications {
     public id?: string
   ) {}
 }
+
+export class Posts {
+  constructor(
+    public groupId: string,
+    public title: string,
+    public content: string,
+    public postedby: string,
+    public postedAt: Date,
+    public id?: string
+  ) {}
+}

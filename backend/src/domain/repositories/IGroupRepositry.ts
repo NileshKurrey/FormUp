@@ -1,4 +1,4 @@
-import { Group, Applications } from '../entities/Groups.js'
+import { Group, Applications, Posts } from '../entities/Groups.js'
 export interface IGroupRepository {
   create(group: Group): Promise<Group>
   update(group: Group): Promise<Group>
@@ -24,4 +24,10 @@ export interface IApplicationsRepository {
   rejectedApplications(groupId: string): Promise<Applications[]>
   approvedApplications(groupId: string): Promise<Applications[]>
   pendingApplications(groupId: string): Promise<Applications[]>
+}
+export interface IPostsRepository {
+  createPost(postData: Posts): Promise<Posts>
+  getPostsByGroupId(groupId: string): Promise<Posts[]>
+  editPost(postId: string, postData: Posts): Promise<Posts>
+  deletePost(postId: string): Promise<void>
 }
