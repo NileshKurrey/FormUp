@@ -1,6 +1,5 @@
-import { includes } from 'zod'
 import type { Cohorts } from '../../domain/entities/Cohorts.js'
-import type { ICohortRepository } from '../../domain/repositories/IcohortRepositry.js'
+import type { ICohortRepository } from '../../domain/repositories/ICohortRepositry.js'
 import type { IDatabaseRepository } from '../../domain/repositories/IDatabaseRepostry.js'
 import type { ILoggerRepository } from '../../domain/repositories/IloggerRepositry.js'
 import { createServiceContainer, type ServiceContainer } from '../../infra/di/container.js'

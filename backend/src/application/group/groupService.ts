@@ -1,6 +1,6 @@
-import type { Group } from '../../domain/entities/Groups.js'
+import type { Applications, Group } from '../../domain/entities/Groups.js'
 import type { IDatabaseRepository } from '../../domain/repositories/IDatabaseRepostry.js'
-import type { IGroupRepository } from '../../domain/repositories/IGroupRepositry.js'
+import type { IApplicationsRepository, IGroupRepository } from '../../domain/repositories/IGroupRepositry.js'
 import type { ILoggerRepository } from '../../domain/repositories/IloggerRepositry.js'
 import { createServiceContainer, type ServiceContainer } from '../../infra/di/container.js'
 
@@ -30,6 +30,7 @@ export class GroupService implements IGroupRepository {
     const group = await this.database.findById(this.model, id)
     return group
   }
+  // only accessible for admins and moderators
   async findAll(): Promise<Group[]> {
     const groups = await this.database.findAll(this.model)
     return groups
@@ -60,32 +61,7 @@ export class GroupService implements IGroupRepository {
     await this.database.updateById(this.model, group)
     return group
   }
-  async addPost(groupId: string, post: any): Promise<JSON> {
-    // const createdPost = await this.database.create(this.postModel, post);
-    // const group = await this.findById(groupId);
-    // if (!group) {
-    //     this.logger.error(`Group with ID ${groupId} not found.`);
-    //     throw new Error("Group not found");
-    // }
-    // if (!group.posts) {
-    //     group.posts = [];
-    // }
-    // group.posts.push(createdPost.id);
-    // await this.database.updateById(this.model, group);
 
-    // do this in future
-    return {} as JSON
-  }
-  async seePosts(groupId: string): Promise<JSON> {
-    // const group = await this.findById(groupId);
-    // if (!group) {
-    //     this.logger.error(`Group with ID ${groupId} not found.`);
-    //     throw new Error("Group not found");
-    // }
-
-    // do this in future
-    return {} as JSON
-  }
   async seeMembers(groupId: string): Promise<Object> {
     const group = await this.findById(groupId)
     if (!group) {
@@ -102,5 +78,105 @@ export class GroupService implements IGroupRepository {
   async getGroupWithCurrentCohort(cohortId: string): Promise<Group[]> {
     const groups = await this.database.findMany(this.model, { cohortId: cohortId })
     return groups
+  }
+}
+
+export class ApplicationsService implements IApplicationsRepository {
+  container: ServiceContainer
+  logger: ILoggerRepository
+  database: IDatabaseRepository
+  model: string = 'applications'
+  constructor() {
+    this.container = createServiceContainer()
+    this.logger = this.container.logger
+    this.database = this.container.database
+  }
+  async sendApplication(application: Applications): Promise<Applications> {
+    const checkApplication = await this.database.findOne(this.model, {
+      where: { applicantId: application.applicantId, groupId: application.groupId },
+    })
+    if (checkApplication) {
+      this.logger.error(
+        `Application already exists for applicant ID ${application.applicantId} to group ID ${application.groupId}.`
+      )
+      throw new Error('Application already exists')
+    }
+    const createdApplication = await this.database.create(this.model, application)
+    if (!createdApplication) {
+      this.logger.error(`Application could not be created.`)
+      throw new Error('Application creation failed')
+    }
+    return createdApplication
+  }
+  async updateApplication(application: Applications): Promise<Applications> {
+    const updatedApplication = await this.database.updateById(this.model, application)
+    if (!updatedApplication) {
+      this.logger.error(`Application with ID ${application.id} could not be updated.`)
+      throw new Error('Application update failed')
+    }
+    return updatedApplication
+  }
+  async listUserApplications(userId: string): Promise<Applications[]> {
+    const applications = await this.database.findMany(this.model, { applicantId: userId })
+    if (!applications) {
+      this.logger.error(`No applications found for user ID ${userId}.`)
+      throw new Error('No applications found')
+    }
+    return applications
+  }
+  async applicationById(applicationId: string): Promise<Applications | null> {
+    const application = await this.database.findById(this.model, applicationId)
+    if (!application) {
+      this.logger.error(`Application with ID ${applicationId} not found.`)
+      throw new Error('Application not found')
+    }
+    return application
+  }
+  async withdrawApplication(applicationId: string): Promise<Applications> {
+    const application = await this.applicationById(applicationId)
+    if (!application) {
+      this.logger.error(`Application with ID ${applicationId} not found.`)
+      throw new Error('Application not found')
+    }
+    application.status = 'withdrawn'
+    const updatedApplication = await this.database.updateById(this.model, application)
+    return updatedApplication
+  }
+  async listGroupApplications(groupId: string): Promise<Applications[]> {
+    const applications = await this.database.findMany(this.model, { groupId: groupId })
+    return applications
+  }
+  async approveApplication(applicationId: string): Promise<Applications> {
+    const application = await this.applicationById(applicationId)
+    if (!application) {
+      this.logger.error(`Application with ID ${applicationId} not found.`)
+      throw new Error('Application not found')
+    }
+    application.status = 'approved'
+    const updatedApplication = await this.database.updateById(this.model, application)
+
+    return updatedApplication
+  }
+  async rejectApplication(applicationId: string): Promise<Applications> {
+    const application = await this.applicationById(applicationId)
+    if (!application) {
+      this.logger.error(`Application with ID ${applicationId} not found.`)
+      throw new Error('Application not found')
+    }
+    application.status = 'rejected'
+    const updatedApplication = await this.database.updateById(this.model, application)
+    return updatedApplication
+  }
+  async rejectedApplications(groupId: string): Promise<Applications[]> {
+    const applications = await this.database.findMany(this.model, { groupId: groupId, status: 'rejected' })
+    return applications
+  }
+  async approvedApplications(groupId: string): Promise<Applications[]> {
+    const applications = await this.database.findMany(this.model, { groupId: groupId, status: 'approved' })
+    return applications
+  }
+  async pendingApplications(groupId: string): Promise<Applications[]> {
+    const applications = await this.database.findMany(this.model, { groupId: groupId, status: 'pending' })
+    return applications
   }
 }

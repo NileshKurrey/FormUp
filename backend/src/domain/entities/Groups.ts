@@ -20,3 +20,21 @@ export class Group {
     public id?: string
   ) {}
 }
+
+export class Applications {
+  constructor(
+    public title: string,
+    public description: string,
+    public applicantId: string,
+    public groupId: string,
+    public metaData: string | null,
+    public profileLinks: string[] | null,
+    public status: string,
+    public requestedAt: Date,
+    public updatedAt: Date,
+    public approvedAt?: Date,
+    public withdrawnAt?: Date,
+    public rejectedAt?: Date,
+    public id?: string
+  ) {}
+}

@@ -1,19 +1,22 @@
 import type { NextFunction } from 'express'
-import { GroupService } from '../../application/group/groupService.js'
-import type { IGroupRepository } from '../../domain/repositories/IGroupRepositry.js'
+import { ApplicationsService, GroupService } from '../../application/group/groupService.js'
+import type { IApplicationsRepository, IGroupRepository } from '../../domain/repositories/IGroupRepositry.js'
 import type { IHttpRequest, IHttpResponse } from '../../domain/repositories/IHttpServer.js'
 import type { ILoggerRepository } from '../../domain/repositories/IloggerRepositry.js'
 import { createServiceContainer, type ServiceContainer } from '../../infra/di/container.js'
 import { CatchAsync } from '../../shared/errors/catchAsyncFn.js'
 import { ApiResponse } from '../../shared/utils/ApiResponse.js'
 import { ApiError } from '../../shared/errors/ApiError.js'
+import { ca, th } from 'zod/locales'
 
 export class GroupController {
   private groupService: IGroupRepository
+  private applicationsService: IApplicationsRepository
   private container: ServiceContainer
   private logger: ILoggerRepository
   constructor() {
     this.groupService = new GroupService()
+    this.applicationsService = new ApplicationsService()
     this.container = createServiceContainer()
     this.logger = this.container.logger
   }
@@ -78,11 +81,194 @@ export class GroupController {
     const groups = await this.groupService.findByCohortId(cohortId)
     res.status(200).json(new ApiResponse(200, groups, 'Groups fetched successfully'))
   })
-  addMemberToGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
-    // Implement in future
+
+  sendApplication = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const applicationData = req.body
+    const groupId = req.params
+    const userId = req.user?.id
+    if (!userId) {
+      this.logger.error('User ID is required to send application')
+      res.status(400).json({ message: 'User ID is required to send application' })
+      next(new Error('User ID is required to send application'))
+      throw new ApiError(400, 'User ID is required to send application')
+    }
+    applicationData.applicantId = userId
+    applicationData.groupId = groupId
+    const application = await this.applicationsService.sendApplication(applicationData)
+    if (!application) {
+      this.logger.error('Failed to send application')
+      res.status(500).json({ message: 'Failed to send application' })
+      next(new ApiError(500, 'Failed to send application'))
+    }
+    res.status(201).json(new ApiResponse(200, application, 'Application sent successfully'))
   })
+  updateApplication = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const applicationData = req.body
+    const application = await this.applicationsService.updateApplication(applicationData)
+    if (!application) {
+      this.logger.error('Failed to update application')
+      res.status(500).json({ message: 'Failed to update application' })
+      next(new ApiError(500, 'Failed to update application'))
+    }
+    res.status(200).json(new ApiResponse(200, application, 'Application updated successfully'))
+  })
+  getApplicationDetails = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { applicationId } = req.params
+    if (!applicationId) {
+      this.logger.error('Application ID is required')
+      res.status(400).json({ message: 'Application ID is required' })
+      next(new Error('Application ID is required'))
+      throw new ApiError(400, 'Application ID is required')
+    }
+    const application = await this.applicationsService.applicationById(applicationId)
+    if (!application) {
+      this.logger.error('Application not found')
+      res.status(404).json({ message: 'Application not found' })
+      next(new ApiError(404, 'Application not found'))
+    }
+    res.status(200).json(new ApiResponse(200, application, 'Application fetched successfully'))
+  })
+  withdrawApplication = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { applicationId } = req.params
+    if (!applicationId) {
+      this.logger.error('Application ID is required')
+      res.status(400).json({ message: 'Application ID is required' })
+      next(new Error('Application ID is required'))
+      throw new ApiError(400, 'Application ID is required')
+    }
+    const application = await this.applicationsService.withdrawApplication(applicationId)
+    if (!application) {
+      this.logger.error('Failed to withdraw application')
+      res.status(500).json({ message: 'Failed to withdraw application' })
+      next(new ApiError(500, 'Failed to withdraw application'))
+    }
+    res.status(200).json(new ApiResponse(200, application, 'Application withdrawn successfully'))
+  })
+  listApplications = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { groupId } = req.params
+    if (!groupId) {
+      this.logger.error('Group ID is required')
+      res.status(400).json({ message: 'Group ID is required' })
+      next(new Error('Group ID is required'))
+      throw new ApiError(400, 'Group ID is required')
+    }
+    const applications = await this.applicationsService.listGroupApplications(groupId)
+    if (!applications || applications.length === 0) {
+      this.logger.error('No applications found for the group')
+      res.status(404).json({ message: 'No applications found for the group' })
+      next(new ApiError(404, 'No applications found for the group'))
+    }
+    res.status(200).json(new ApiResponse(200, applications, 'Applications fetched successfully'))
+  })
+
+  addMemberToGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { applicationId } = req.params
+    if (!applicationId) {
+      this.logger.error('Application ID is required to add member')
+      res.status(400).json({ message: 'Application ID is required to add member' })
+      next(new ApiError(400, 'Application ID is required to add member'))
+      throw new ApiError(400, 'Application ID is required to add member')
+    }
+    const application = await this.applicationsService.applicationById(applicationId)
+    if (!application || application === null) {
+      this.logger.error(`Application with ID ${applicationId} not found.`)
+      res.status(404).json({ message: 'Application not found' })
+      next(new ApiError(404, 'Application not found'))
+      throw new ApiError(404, 'Application not found')
+    }
+    const applicantId = application.applicantId
+    const groupId = application.groupId
+    const group = await this.groupService.addMember(groupId, applicantId)
+    if (!group || group === null || group === undefined) {
+      this.logger.error('Failed to add member to group')
+      res.status(500).json({ message: 'Failed to add member to group' })
+      next(new ApiError(500, 'Failed to add member to group'))
+    }
+    res.status(200).json(new ApiResponse(200, group, 'Application approved successfully'))
+  })
+  rejectApplication = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { applicationId } = req.params
+    if (!applicationId) {
+      this.logger.error('Application ID is required to reject application')
+      res.status(400).json({ message: 'Application ID is required to reject application' })
+      next(new Error('Application ID is required to reject application'))
+      throw new ApiError(400, 'Application ID is required to reject application')
+    }
+    const application = await this.applicationsService.rejectApplication(applicationId)
+    if (!application) {
+      this.logger.error('Failed to reject application')
+      res.status(500).json({ message: 'Failed to reject application' })
+      next(new ApiError(500, 'Failed to reject application'))
+    }
+    res.status(200).json(new ApiResponse(200, application, 'Application rejected successfully'))
+  })
+
   removeMemberFromGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
-    // Implement in future
+    const { groupId } = req.params
+    const { userId } = req.body
+    if (!groupId || !userId) {
+      this.logger.error('Group ID and User ID are required to remove member')
+      res.status(400).json({ message: 'Group ID and User ID are required to remove member' })
+      next(new Error('Group ID and User ID are required to remove member'))
+      throw new ApiError(400, 'Group ID and User ID are required to remove member')
+    }
+    const group = await this.groupService.removeMember(groupId, userId)
+    if (!group || group === null || group === undefined) {
+      this.logger.error('Failed to remove member from group')
+      res.status(500).json({ message: 'Failed to remove member from group' })
+      next(new ApiError(500, 'Failed to remove member from group'))
+    }
+    res.status(200).json(new ApiResponse(200, group, 'Member removed successfully'))
+  })
+
+  seeMembers = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { groupId } = req.params
+    if (!groupId) {
+      this.logger.error('Group ID is required to see members')
+      res.status(400).json({ message: 'Group ID is required to see members' })
+      next(new Error('Group ID is required to see members'))
+      throw new ApiError(400, 'Group ID is required to see members')
+    }
+    const members = await this.groupService.seeMembers(groupId)
+    if (!members) {
+      this.logger.error('Failed to fetch members')
+      res.status(500).json({ message: 'Failed to fetch members' })
+      next(new ApiError(500, 'Failed to fetch members'))
+    }
+    res.status(200).json(new ApiResponse(200, members, 'Members fetched successfully'))
+  })
+  rejectedApplications = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { groupId } = req.params
+    if (!groupId) {
+      this.logger.error('Group ID is required to fetch rejected applications')
+      res.status(400).json({ message: 'Group ID is required to fetch rejected applications' })
+      next(new Error('Group ID is required to fetch rejected applications'))
+      throw new ApiError(400, 'Group ID is required to fetch rejected applications')
+    }
+    const applications = await this.applicationsService.rejectedApplications(groupId)
+    res.status(200).json(new ApiResponse(200, applications, 'Rejected applications fetched successfully'))
+  })
+  approvedApplications = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { groupId } = req.params
+    if (!groupId) {
+      this.logger.error('Group ID is required to fetch approved applications')
+      res.status(400).json({ message: 'Group ID is required to fetch approved applications' })
+      next(new Error('Group ID is required to fetch approved applications'))
+      throw new ApiError(400, 'Group ID is required to fetch approved applications')
+    }
+    const applications = await this.applicationsService.approvedApplications(groupId)
+    res.status(200).json(new ApiResponse(200, applications, 'Approved applications fetched successfully'))
+  })
+  pendingApplications = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { groupId } = req.params
+    if (!groupId) {
+      this.logger.error('Group ID is required to fetch pending applications')
+      res.status(400).json({ message: 'Group ID is required to fetch pending applications' })
+      next(new Error('Group ID is required to fetch pending applications'))
+      throw new ApiError(400, 'Group ID is required to fetch pending applications')
+    }
+    const applications = await this.applicationsService.pendingApplications(groupId)
+    res.status(200).json(new ApiResponse(200, applications, 'Pending applications fetched successfully'))
   })
   addPostToGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
     // Implement in future
