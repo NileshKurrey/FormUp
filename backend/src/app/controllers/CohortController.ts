@@ -6,14 +6,18 @@ import { createServiceContainer, type ServiceContainer } from '../../infra/di/co
 import { CatchAsync } from '../../shared/errors/catchAsyncFn.js'
 import { ApiResponse } from '../../shared/utils/ApiResponse.js'
 import { ApiError } from '../../shared/errors/ApiError.js'
+import { EntityType, type IAuditLogRepository } from '../../domain/repositories/IActivityRepositery.js'
+import { ActivityService } from '../../application/activity/activity.js'
 export class CohortController {
   private cohortService: CohortService
   private container: ServiceContainer
   private logger: ILoggerRepository
+  private activityService: IAuditLogRepository
   constructor() {
     this.cohortService = new CohortService()
     this.container = createServiceContainer()
     this.logger = this.container.logger
+    this.activityService = new ActivityService()
   }
   createCohort = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
     const cohortData = req.body
@@ -70,5 +74,15 @@ export class CohortController {
   listCohorts = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
     const cohorts = await this.cohortService.listCohorts()
     res.status(200).json(new ApiResponse(200, cohorts, 'Cohorts retrieved successfully'))
+  })
+  getCohortLogs = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const cohortId = req.params.id
+    if (!cohortId) {
+      this.logger.error('Cohort ID is required to fetch logs')
+      next(new ApiError(400, 'Cohort ID is required to fetch logs'))
+      return res.status(400).json(new ApiResponse(400, '', 'Cohort ID is required to fetch logs'))
+    }
+    const logs = await this.activityService.getLogsByEntity(EntityType.COHORT, cohortId)
+    res.status(200).json(new ApiResponse(200, logs, 'Cohort logs fetched successfully'))
   })
 }

@@ -12,6 +12,8 @@ import { CatchAsync } from '../../shared/errors/catchAsyncFn.js'
 import { ApiResponse } from '../../shared/utils/ApiResponse.js'
 import { ApiError } from '../../shared/errors/ApiError.js'
 import { ca, th } from 'zod/locales'
+import { EntityType, type IAuditLogRepository } from '../../domain/repositories/IActivityRepositery.js'
+import { ActivityService } from '../../application/activity/activity.js'
 
 export class GroupController {
   private groupService: IGroupRepository
@@ -19,11 +21,13 @@ export class GroupController {
   private postsService: IPostsRepository
   private container: ServiceContainer
   private logger: ILoggerRepository
+  private activityService: IAuditLogRepository
   constructor() {
     this.groupService = new GroupService()
     this.applicationsService = new ApplicationsService()
     this.postsService = new PostsService()
     this.container = createServiceContainer()
+    this.activityService = new ActivityService()
     this.logger = this.container.logger
   }
   createGroup = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
@@ -361,5 +365,16 @@ export class GroupController {
     }
     await this.postsService.deletePost(postId)
     res.status(200).json(new ApiResponse(200, null, 'Post deleted successfully'))
+  })
+  getGroupLogs = CatchAsync(async (req: IHttpRequest, res: IHttpResponse, next: NextFunction) => {
+    const { groupId } = req.params
+    if (!groupId) {
+      this.logger.error('Group ID is required to fetch logs')
+      res.status(400).json({ message: "can't able to fetch logs, Group ID is missing" })
+      next(new Error("can't able to fetch logs, Group ID is missing"))
+      throw new ApiError(400, "can't able to fetch logs, Group ID is missing")
+    }
+    const logs = await this.activityService.getLogsByEntity(EntityType.GROUP, groupId)
+    res.status(200).json(new ApiResponse(200, logs, 'Group logs fetched successfully'))
   })
 }

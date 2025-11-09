@@ -10,14 +10,18 @@ import { CatchAsync } from '../../shared/errors/catchAsyncFn.js'
 import { generateNonce, generateState } from '../../shared/utils/auth/utils.js'
 import jwt from 'jsonwebtoken'
 import { env } from '../../shared/utils/env/env.js'
+import type { IAuditLogRepository } from '../../domain/repositories/IActivityRepositery.js'
+import { ActivityService } from '../../application/activity/activity.js'
 
 export class UserController {
   UserService: IUserRepository
+  ActivityService: IAuditLogRepository
   container: ServiceContainer
   logger: ILoggerRepository
   constructor() {
     this.UserService = new UserService()
     this.container = createServiceContainer()
+    this.ActivityService = new ActivityService()
     this.logger = this.container.logger
   }
 
@@ -121,5 +125,15 @@ export class UserController {
     res.clearCookie('access_token')
     res.status(200).json({ message: 'Logout Successful' })
     this.logger.info('Logout Successful')
+  })
+  logs = CatchAsync(async (req: IHttpRequest, res: IHttpResponse) => {
+    const user = req.user
+    if (!user.id) {
+      this.logger.error('User ID is required to fetch logs')
+      res.status(400).json(new ApiError(400, "can't able to fetch logs, User ID is missing"))
+      throw new ApiError(400, "can't able to fetch logs, User ID is missing")
+    }
+    const log = await this.ActivityService.getLogsByUser(user.id)
+    res.status(200).json({ message: 'User logs retrieved successfully', logs: log })
   })
 }

@@ -8,3 +8,4 @@ cohortRouter.get('/:id', cohortController.getCohortById)
 cohortRouter.put('/update/:id', cohortController.updateCohort)
 // cohortRouter.delete("/:id", cohortController.deleteCohort);
 cohortRouter.get('/list', cohortController.listCohorts)
+cohortRouter.get('/logs/:id', cohortController.getCohortLogs)

@@ -7,18 +7,27 @@ import type { IUserRepository } from '../../domain/repositories/IUserRepostiry.j
 import type { ServiceContainer } from '../../infra/di/container.js'
 import { GoogleAuth } from '../../infra/auth/googleAuth.js'
 import { createServiceContainer } from '../../infra/di/container.js'
+import {
+  Actions,
+  EntityType,
+  type AuditLogEntity,
+  type IAuditLogRepository,
+} from '../../domain/repositories/IActivityRepositery.js'
+import { ActivityService } from '../activity/activity.js'
 
 export class UserService implements IUserRepository {
   googleAuth: IAuthRepository
   container: ServiceContainer
   logger: ILoggerRepository
   database: IDatabaseRepository
+  activityService: IAuditLogRepository
   model: string = 'users'
   constructor() {
     this.googleAuth = new GoogleAuth()
     this.container = createServiceContainer()
     this.logger = this.container.logger
     this.database = this.container.database
+    this.activityService = new ActivityService()
   }
   login(oidcType: string, state: string, nonce: string): string {
     if (oidcType === 'google') {
@@ -54,14 +63,38 @@ export class UserService implements IUserRepository {
   }
   async create(user: UserEntity): Promise<UserEntity> {
     const createdUser = await this.database.create(this.model, user)
+    const logAction: AuditLogEntity = {
+      entityType: EntityType.USER,
+      action: Actions.CREATE.toString(),
+      message: `You Registered Successfully`,
+      userId: createdUser.id,
+      timestamp: new Date(),
+    }
+    this.activityService.logAction(logAction)
     return createdUser
   }
   async update(user: UserEntity): Promise<UserEntity> {
     const updatedUser = await this.database.updateById(this.model, user)
+    const logAction: AuditLogEntity = {
+      entityType: EntityType.USER,
+      action: Actions.CREATE.toString(),
+      message: `User updated successfully`,
+      userId: updatedUser.id,
+      timestamp: new Date(),
+    }
+    this.activityService.logAction(logAction)
     return updatedUser
   }
   async delete(id: string): Promise<void> {
     await this.database.deleteById(this.model, id)
+    const logAction: AuditLogEntity = {
+      entityType: EntityType.USER,
+      action: Actions.DISBAND.toString(),
+      message: `User deleted successfully`,
+      userId: id,
+      timestamp: new Date(),
+    }
+    this.activityService.logAction(logAction)
   }
   async findAll(): Promise<UserEntity[]> {
     const users = await this.database.findAll(this.model)

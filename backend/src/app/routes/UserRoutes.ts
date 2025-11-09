@@ -10,5 +10,5 @@ userRouter.route('/callback/:oidcType').get(userController.callback)
 userRouter.route('/updateProfile/:id').put(authMiddleware, userController.updateUser)
 userRouter.route('/profile/:id').get(authMiddleware, userController.getProfile)
 userRouter.route('/logout').post(authMiddleware, userController.logout)
-
+userRouter.route('/logs').post(authMiddleware, userController.logs)
 export default userRouter

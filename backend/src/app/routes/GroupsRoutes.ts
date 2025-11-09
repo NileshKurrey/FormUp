@@ -30,3 +30,5 @@ groupsRouter.post('/posts/:groupId', authMiddleware, groupController.addPostToGr
 groupsRouter.get('/:groupId/posts', authMiddleware, groupController.listPostsInGroup)
 groupsRouter.put('/posts/:postId/edit', authMiddleware, groupController.editPostInGroup)
 groupsRouter.delete('/posts/:postId', authMiddleware, groupController.deletePostFromGroup)
+
+groupsRouter.get('/:groupId/logs', authMiddleware, groupController.getGroupLogs)
