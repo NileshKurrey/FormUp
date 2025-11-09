@@ -189,6 +189,7 @@ export class GroupController {
     const applicantId = application.applicantId
     const groupId = application.groupId
     const group = await this.groupService.addMember(groupId, applicantId)
+    await this.applicationsService.approveApplication(applicationId)
     if (!group || group === null || group === undefined) {
       this.logger.error('Failed to add member to group')
       res.status(500).json({ message: 'Failed to add member to group' })
