@@ -14,22 +14,22 @@
 // }
 
 export enum EntityType {
-  USER,
-  GROUP,
-  APPLICATION,
-  COHORT,
+  USER = 'USER',
+  GROUP = 'GROUP',
+  APPLICATION = 'APPLICATION',
+  COHORT = 'COHORT',
 }
 
 export enum Actions {
-  CREATE,
-  JOIN_REQUEST,
-  APPROVE,
-  DECLINE,
-  WITHDRAW,
-  LEAVE,
-  KICK,
-  DISBAND,
-  POST_NOTICE,
+  CREATE = 'CREATE',
+  JOIN_REQUEST = 'JOIN_REQUEST',
+  APPROVE = 'APPROVE',
+  DECLINE = 'DECLINE',
+  WITHDRAW = 'WITHDRAW',
+  LEAVE = 'LEAVE',
+  KICK = 'KICK',
+  DISBAND = 'DISBAND',
+  POST_NOTICE = 'POST_NOTICE',
 }
 
 export interface AuditLogEntity {
@@ -41,6 +41,8 @@ export interface AuditLogEntity {
   userId: String
   timestamp: Date
   metaData?: JSON
+  actor?: any[]
+  group?: any[]
 }
 
 export interface IAuditLogRepository {

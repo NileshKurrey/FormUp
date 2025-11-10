@@ -64,7 +64,7 @@ model Users {
   profileLinks  String[]
   
   // Relations
-  auditLogs     AuditLog[]
+  auditLogs     AuditLog[]    @relation("actorLogs")
   memberOf      Groups[]      @relation("GroupMembers")
   leaderOf      Groups[]      @relation("GroupLeaders")
   moderatorOf   CohortModerators[]
@@ -88,6 +88,7 @@ model Cohorts {
   students      CohortStudents[]
   groups        Groups[]  @relation("CohortGroups")
   SeedData      SeedData[] @relation("CohortSeedData")
+  auditLogs     AuditLog[]   @relation("cohortLogs")
 }
 
 model CohortModerators {
@@ -146,7 +147,7 @@ model Groups {
   cohort            Cohorts        @relation("CohortGroups", fields: [cohortId], references: [id])
   posts             Post[]
   applications      Applications[]
-  auditLogs         AuditLog[]
+  auditLogs         AuditLog[]   @relation("groupLogs")
 }
 
 /* Application for joining group */
@@ -168,6 +169,7 @@ model Applications {
   // Relations
   applicant     Users      @relation(fields: [applicantId], references: [id])
   group         Groups     @relation(fields: [groupId], references: [id])
+  auditLogs     AuditLog[]   @relation("applicationLogs")
 }
 
 /* Group posts */
@@ -187,7 +189,7 @@ model Post {
 model AuditLog {
   id          String       @id @default(cuid())
   entityType  EntityType   @default(USER)
-  entityId    String
+  entityId    String?
   action      String
   message     String
   userId      String
@@ -195,6 +197,10 @@ model AuditLog {
   metaData    Json?
 
   // Relations
-  actor       Users        @relation(fields: [userId], references: [id])
-  group       Groups?      @relation(fields: [entityId], references: [id])
+  actor       Users        @relation("actorLogs", fields: [userId], references: [id])
+  group       Groups?      @relation("groupLogs", fields: [entityId], references: [id], map: "AuditLog_group_fkey")
+  cohort     Cohorts?     @relation("cohortLogs", fields: [entityId], references: [id], map: "AuditLog_cohort_fkey")
+  application Applications? @relation("applicationLogs", fields: [entityId], references: [id], map: "AuditLog_application_fkey")
+
+  
 }

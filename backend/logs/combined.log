@@ -125,3 +125,60 @@
 2025-11-06T09:13:15.039Z [DEBUG]: Fetched cohort: [{"id":"hello","cohortId":"cohort","createdAt":"2025-10-30T17:41:00.807Z","updatedAt":"2025-10-14T00:00:00.000Z"}]
 2025-11-06T09:21:10.762Z [INFO]: ✅ Server is running on Port:4000
 2025-11-06T09:26:19.886Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:22:46.452Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:24:22.614Z [INFO]: get result of decoded token
+2025-11-09T18:27:24.243Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:27:35.115Z [INFO]: get result of decoded token
+2025-11-09T18:28:16.468Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:28:31.441Z [INFO]: get result of decoded token
+2025-11-09T18:29:07.789Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:29:36.304Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:29:49.061Z [INFO]: get result of decoded token
+2025-11-09T18:30:22.168Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:30:30.557Z [INFO]: get result of decoded token
+2025-11-09T18:31:25.675Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:32:14.415Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:32:19.702Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:32:30.852Z [INFO]: get result of decoded token
+2025-11-09T18:33:33.360Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:37:48.887Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:38:03.523Z [INFO]: get result of decoded token
+2025-11-09T18:39:17.548Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:39:28.955Z [INFO]: get result of decoded token
+2025-11-09T18:39:32.841Z [INFO]: Logging action: 0 for entity: 0 with ID: undefined by user: cmhs25d3w0000uqtcc5q8nj7d
+2025-11-09T18:39:32.842Z [INFO]: User Created Successfully
+2025-11-09T18:40:54.947Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:41:08.197Z [INFO]: get result of decoded token
+2025-11-09T18:41:12.082Z [INFO]: Logging action: 0 for entity: 0 with ID: undefined by user: cmhs25d3w0000uqtcc5q8nj7d
+2025-11-09T18:41:12.088Z [INFO]: Login Successful
+2025-11-09T18:42:24.673Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:42:34.421Z [INFO]: get result of decoded token
+2025-11-09T18:42:38.408Z [INFO]: Logging action: 0 for entity: 0 with ID: undefined by user: cmhs29c9v0000uqdkdnyazkpt
+2025-11-09T18:42:38.410Z [INFO]: User Created Successfully
+2025-11-09T18:42:38.415Z [INFO]: Login Successful
+2025-11-09T18:46:04.165Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:46:34.290Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T18:47:03.333Z [INFO]: get result of decoded token
+2025-11-09T18:47:07.320Z [INFO]: Logging action: 0 for entity: 0 with ID: undefined by user: cmhs2f3rp0000uqncmyzppsxi
+2025-11-09T18:47:07.321Z [INFO]: User Created Successfully
+2025-11-09T18:47:07.328Z [INFO]: Login Successful
+2025-11-09T19:03:35.923Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T19:03:46.118Z [INFO]: get result of decoded token
+2025-11-09T19:03:49.947Z [INFO]: Logging action: 0 for entity: 0 with ID: undefined by user: cmhs30lfc0000uqhca8879mkp
+2025-11-09T19:03:49.949Z [INFO]: User Created Successfully
+2025-11-09T19:03:49.956Z [INFO]: Login Successful
+2025-11-09T19:05:17.049Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T19:05:42.415Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T19:05:58.674Z [INFO]: get result of decoded token
+2025-11-09T19:06:03.285Z [INFO]: Logging action: CREATE for entity: USER with ID: undefined by user: cmhs30lfc0000uqhca8879mkp
+2025-11-09T19:06:03.292Z [INFO]: Login Successful
+2025-11-09T19:08:00.408Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T19:08:23.267Z [INFO]: get result of decoded token
+2025-11-09T19:08:27.050Z [INFO]: Logging action: CREATE for entity: USER by user: cmhs30lfc0000uqhca8879mkp
+2025-11-09T19:08:27.056Z [INFO]: Login Successful
+2025-11-09T19:10:13.475Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T19:13:08.979Z [INFO]: ✅ Server is running on Port:4000
+2025-11-09T19:14:10.738Z [INFO]: get result of decoded token
+2025-11-09T19:14:14.915Z [INFO]: Logging action: CREATE for entity: USER by user: cmhs3dzmj0000uqewnp1c5po8
+2025-11-09T19:14:14.916Z [INFO]: User Created Successfully
+2025-11-09T19:14:14.921Z [INFO]: Login Successful

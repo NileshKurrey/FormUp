@@ -58,7 +58,7 @@ export class UserService implements IUserRepository {
     return user
   }
   async findByEmail(email: string): Promise<boolean> {
-    const user = await this.database.findOne('seedStudentEmail', { email: email })
+    const user = await this.database.findOne('seedStudentEmail', { where: { email } })
     return user !== null
   }
   async create(user: UserEntity): Promise<UserEntity> {
@@ -75,14 +75,14 @@ export class UserService implements IUserRepository {
   }
   async update(user: UserEntity): Promise<UserEntity> {
     const updatedUser = await this.database.updateById(this.model, user)
-    const logAction: AuditLogEntity = {
-      entityType: EntityType.USER,
-      action: Actions.CREATE.toString(),
-      message: `User updated successfully`,
-      userId: updatedUser.id,
-      timestamp: new Date(),
-    }
-    this.activityService.logAction(logAction)
+    // const logAction: AuditLogEntity = {
+    //   entityType: EntityType.USER,
+    //   action: Actions.CREATE.toString(),
+    //   message: `User updated successfully`,
+    //   userId: updatedUser.id,
+    //   timestamp: new Date(),
+    // }
+    // this.activityService.logAction(logAction)
     return updatedUser
   }
   async delete(id: string): Promise<void> {
@@ -101,7 +101,7 @@ export class UserService implements IUserRepository {
     return users
   }
   async findUser(oidcId: string): Promise<UserEntity | null> {
-    const user = await this.database.findOne(this.model, { oidcId })
+    const user = await this.database.findOne(this.model, { where: { oidcId } })
     return user
   }
 }
